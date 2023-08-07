@@ -1,13 +1,19 @@
 import React, {  useState } from 'react'
 import { usePostTodoMutation } from '../redux/apiCalls/todoApi'
-
+import axios from 'axios'
 function Form() {
     const [text, setText] = useState("")
     const [postTodo] = usePostTodoMutation()
-
-    const submitTodo =  (e) => {
+   let token = localStorage.getItem("access_token");
+   
+    const submitTodo = async (e) => {
         e.preventDefault();
-         postTodo(text)
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        };
+        //  postTodo(text)
+        axios.post('http://localhost:8000/tasks/todos',{text},{headers}).then((res)=>console.log("res from todos api",res)).catch((err)=>console.log(err))
     }
     const handleTodoChange = (e) => {
         setText(e.target.value)

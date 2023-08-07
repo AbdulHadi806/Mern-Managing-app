@@ -1,12 +1,13 @@
 const Todo = require("../model/todo");
 
-const addTodo = async (req, res) => {
+const addTodo = async (req, res, next) => {
   try {
+    console.log(req.body)
     const newTodo = new Todo({
-      data: req.body.data,
+      data: req.body.text,
+      user: req.user._id,
       createdAt: Date.now(),
     }); 
-
     await newTodo.save();
     return res.status(200).json(newTodo);
   } catch (err) {
@@ -23,13 +24,22 @@ const getAllTodo = async (req, res) => {
   }
 }
 
-const getTodoById = async (req, res) => {
+// const getTodoById = async (req, res) => {
+//   try {
+//     const _id = req.params.id
+//     const deletedTodo = await Todo.findById(_id)
+//     res.status(200).json(deletedTodo)
+//   } catch (err) {
+//     return res.status(500).json(err.message)
+//   }
+// }
+
+const getMyTasks = async(req, res) => {
   try {
-    const _id = req.params.id
-    const deletedTodo = await Todo.findById(_id)
-    res.status(200).json(deletedTodo)
-  } catch (err) {
-    return res.status(500).json(err.message)
+    const tasks = await Todo.find({user: req.user._id})
+    return res.status(200).json(tasks)
+  } catch(err) {
+    console.log(err)
   }
 }
 
@@ -49,10 +59,12 @@ const completeTodo = async (req, res) => {
     const existingTodo = await Todo.findById(_id);
     const allSubTasksDone = existingTodo.subtasks.every(i => i.done === true);
     let updatedDone = false;
+    const SUB_TASK_CONDITION = req.body.type == "SUB_TASK" && allSubTasksDone == true && existingTodo.subtasks.length > 0;
     if(req.body.type == "MAIN_TODO") {
-       updatedDone = !existingTodo.done;
+      console.log(req.body)
+      updatedDone = !existingTodo.done;
     }
-    else {
+     if  (SUB_TASK_CONDITION) {
       updatedDone = allSubTasksDone
     }
     req.body.done = updatedDone;
@@ -95,7 +107,7 @@ const updateSubTask = async (req, res) => {
 
 exports.updateSubTask = updateSubTask
 exports.addSubTasks = addSubTasks
-exports.getTodoById = getTodoById
+exports.getMyTasks = getMyTasks
 exports.completeTodo = completeTodo
 exports.deleteTodo = deleteTodo
 exports.getAllTodo = getAllTodo

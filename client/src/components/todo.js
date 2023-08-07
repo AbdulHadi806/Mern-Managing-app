@@ -6,7 +6,7 @@ import { faAdd, faCheck, faList, faLocationArrow, faTrash } from '@fortawesome/f
 
 function Todo({ item }) {
   const [subtask, setSubTask] = useState("")
-  const [showTask, setShowTask] = useState(true)
+  const [showTask, setShowTask] = useState(false)
   const [addSubTodo, setAddSubTodo] = useState(false)
   const [deleteTodo] = useDeleteTodoMutation();
   const [updateTodo] = useUpdateTodoMutation();
@@ -39,7 +39,7 @@ function Todo({ item }) {
 
   return (
     <li className='border-2 rounded border-[#000] mx-8 my-5 py-8'>
-      <div style={item.done == true ? { background: "#c4e1e5" } : { background: "#fff" }} className='flex border-1 border-[#9b9c9c] rounded border justify-between items-center h-[60px] px-[20px] my-3 mx-[39px]'>
+      <div style={item.done == true ? { background: "#c4e1e5" } : { background: "#fff" }} className='flex border-1 border-[#9b9c9c] flex-wrap rounded border justify-between items-center h-[60px] px-[20px] my-3 mx-[39px]'>
         <span className='text-[16px]'>{item.data}</span>
         <div className='flex gap-[10px]'>
           <button onClick={e => { e.preventDefault(); updateHandler(item._id) }} className='h-[38px] border-1 bg-[#1d1ba4] w-[50px] border-[#cad9d3] text-white rounded'><FontAwesomeIcon icon={faCheck} /></button>

@@ -1,13 +1,13 @@
 const express = require("express");
-const {addTodo, getAllTodo, deleteTodo, completeTodo, getTodoById, addSubTasks, updateSubTask} = require("../controller/todo-controller");
+const TaskRoutes = require("./tasks");
+const AuthRoutes = require("./auth");
+const { checkAuth } = require("../utils/checkAuth");
+const UserRoutes = require("./users");
 const Routes = express.Router();
 
-Routes.post("/todos", addTodo)
-Routes.get("/todos", getAllTodo)
-Routes.get("/todos/:id", getTodoById)
-Routes.delete("/todos/:id", deleteTodo)
-Routes.patch("/todos/:id", completeTodo)
-Routes.patch("/todos/:id/subtasks", addSubTasks)
-Routes.patch("/todos/:TaskID/:subID", updateSubTask)
+Routes.use('/tasks', checkAuth,TaskRoutes)
+Routes.use('/auth', AuthRoutes)
+Routes.use('/me', checkAuth,UserRoutes)
+// Routes.get("/login", sendLoginUser)
 
 module.exports = Routes;
