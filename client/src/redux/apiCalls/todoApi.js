@@ -8,14 +8,13 @@ export const apiSlice = createApi({
         prepareHeaders: (headers, { getState }) => {
             // Add the token to the headers if available
             const token = getToken();
-            console.log(token,'token')
             if (token) {
               headers.set('authorization', `Bearer ${token}`);
             }
             return headers;
           },
     }),
-    tagTypes: ["Todos", 'User'],
+    tagTypes: ["Todos", "User"],
     endpoints: (builder) => ({
         fetchTodo: builder.query({
             query: () => "tasks/myTasks",
@@ -78,8 +77,8 @@ export const apiSlice = createApi({
                     "Content-type": "application/json; charset=UTF-8"
                 }
             }),
-
-            invalidatesTags: ['User']
+            onQueryReturned: (response) => ({ data: response }),
+            invalidatesTags: ['Todos', 'User']
         }),
         loginUser: builder.mutation({
             query: (userData) => ({
@@ -90,24 +89,16 @@ export const apiSlice = createApi({
                 },
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
-                    // "Authorization": `Bearer `
-                    
                 }
             }),
-            invalidatesTags: ['User']
+            invalidatesTags: ['Todos', 'User']
         }),
-        getUser: builder.mutation({
-            query: (userData) => ({
-                url: 'me/info',
-                method: 'GET',
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            }),
-            invalidatesTags: ['User']
+        getUser: builder.query({
+            query: () => "me/info",
+            providesTags: ['User']
         }),
         isLoggedIn: builder.mutation({
-            query: (userData) => ({
+            query: () => ({
                 url: 'auth/islogin',
                 method: 'GET',
                 headers: {
@@ -125,8 +116,8 @@ export const apiSlice = createApi({
                 }
             }),
 
-            invalidatesTags: ['Todos'] 
+            invalidatesTags: ['User'] 
         }),
     }),
 })
-export const { usePostTodoMutation, useIsLoggedOutMutation,useIsLoggedInMutation, useLoginUserMutation, useGetUserMutation, usePostUserMutation, useAddSubTasksMutation, useUpdateSubTasksMutation, useFetchTodoQuery, useDeleteTodoMutation, useUpdateTodoMutation } = apiSlice
+export const { usePostTodoMutation, useIsLoggedOutMutation,useIsLoggedInMutation, useLoginUserMutation, useGetUserQuery, usePostUserMutation, useAddSubTasksMutation, useUpdateSubTasksMutation, useFetchTodoQuery, useDeleteTodoMutation, useUpdateTodoMutation } = apiSlice

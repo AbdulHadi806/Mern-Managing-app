@@ -38,7 +38,7 @@ function Todo({ item }) {
   }, [item.subtasks]);
 
   return (
-    <li className='border-2 rounded border-[#000] mx-8 my-5 py-8'>
+    <li className='border-2 rounded bg-[#e3e3e3] border-[#000] mx-8 my-5 py-8'>
       <div style={item.done == true ? { background: "#c4e1e5" } : { background: "#fff" }} className='flex border-1 border-[#9b9c9c] flex-wrap rounded border justify-between items-center h-[60px] px-[20px] my-3 mx-[39px]'>
         <span className='text-[16px]'>{item.data}</span>
         <div className='flex gap-[10px]'>

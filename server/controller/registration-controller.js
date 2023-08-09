@@ -1,5 +1,5 @@
 const User = require("../model/resgistration");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { errorHandler } = require("../utils/error");
 const postUser = async (req, res, next) => {
@@ -7,8 +7,12 @@ const postUser = async (req, res, next) => {
         return next(errorHandler({status: 400, message: "Need both userName and Password in signUp"}))
     }
     try {
+        const userExists = await User.findOne({ user: req.body.data.userName });
+        console.log(userExists)
+        if(userExists !== null) {
+            return res.status(500).json({message: "User Already Exists", status: false})
+        }
         const salt = await bcrypt.genSalt(10);
-        console.log(req.body, ":::::::::::::")
         const password = req.body.data.password
         const hashedPassword = await bcrypt.hash(password, salt)
         const newUser = await new User({
@@ -16,9 +20,9 @@ const postUser = async (req, res, next) => {
             password: hashedPassword,
         });
         await newUser.save()
-        return res.status(200).json(newUser);
+         res.status(200).json({message: "Successfully Signed In", status: true});
     } catch (err) {
-        return res.status(500).json({err, status: "No working"})
+        return res.status(500).json({err, message: "Unsuccessfull in creating a user", status: false})
     }
 };
 

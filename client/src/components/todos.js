@@ -4,7 +4,6 @@ import { useFetchTodoQuery} from '../redux/apiCalls/todoApi';
 
 function Todos() {
   const { data, isLoading } = useFetchTodoQuery();
-
   if (isLoading) {
     return <h1 className="text-white">Data is Loading</h1>;
   }
@@ -12,7 +11,7 @@ function Todos() {
   return (
     <div className=" max-h-[500px] overflow-y-auto">
       <ul>
-        {data &&
+        {data.length == 0? <h1 className='text-center'>Please Upload Todos</h1>:
           data.map((item) => {
             return (
               <Todo

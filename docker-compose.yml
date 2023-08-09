@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/index
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - data-volume:/data/db
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  data-volume:
