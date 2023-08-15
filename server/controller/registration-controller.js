@@ -55,8 +55,6 @@ const loginUser = async (req, res) => {
 }
 
 
-
-
 const logOutUser = (req, res) => {
     return res.status(200).json({status: "Logged Out"})
 }

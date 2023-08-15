@@ -2,6 +2,7 @@ const Todo = require("../model/todo");
 
 const addTodo = async (req, res, next) => {
   try {
+    console.log(typeof req.user._id)
     const newTodo = new Todo({
       data: req.body.todoData,
       user: req.user._id,
